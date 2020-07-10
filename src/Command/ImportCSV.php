@@ -30,21 +30,21 @@ class ImportCSV extends Command
         $this
             ->setName('import:csv')
             ->setDescription('Import data from CSV file')
-            ->addOption("path", null, InputOption::VALUE_OPTIONAL, "Path to the dataset CSV", "var/csv");
+            ->addOption("path", null, InputOption::VALUE_OPTIONAL, "Path to the dataset CSV", "var/csv/dataset.csv");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $content = "";
         $path = $input->getOption('path');
-        $real_path = __DIR__ . "/../../" . $path . "/dataset.csv";
+        $real_path = __DIR__ . "/../../" . $path;
         $rows = array();
         //Get the file
         if (file_exists($real_path)) {
             $csv = new CSV($real_path);
             $rows = $csv->csvToArray();
         }
-
+        //if empty csv or file not found
         if (!empty($rows)) {
             // Turning off doctrine default logs queries for saving memory
             $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
@@ -63,6 +63,7 @@ class ImportCSV extends Command
             foreach ($rows as $row) {
                 $library = new Library();
 
+                //set object
                 $library
                     ->setTitle($row['Titre'])
                     ->setName($row['Nom'])
@@ -81,7 +82,6 @@ class ImportCSV extends Command
 
                     // Advancing for progress display on console
                     $progress->advance($batchSize);
-                    $now = new \DateTime();
                     $output->writeln(' of datas imported ... ');
                 }
                 $i++;
