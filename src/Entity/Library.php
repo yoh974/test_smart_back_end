@@ -13,7 +13,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 /**
  * @ApiResource(
  *     collectionOperations={"get","post"},
- *     itemOperations={"get","patch"={"input_formats"={"json"={"application/merge-patch+json"}}},"delete"}
+ *     itemOperations={"get","patch"={"input_formats"={"json"={"application/ld+json"}}},"delete"}
  * )
  * @ApiFilter(
  *     SearchFilter::class,
