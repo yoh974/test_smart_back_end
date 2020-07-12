@@ -7,11 +7,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\LibraryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ApiResource(
  *     collectionOperations={"get","post"},
- *     itemOperations={"get","patch"={"input_formats"={"json"={"application/merge-patch+json"}}}}
+ *     itemOperations={"get","patch"={"input_formats"={"json"={"application/merge-patch+json"}}},"delete"}
  * )
  * @ApiFilter(
  *     SearchFilter::class,
@@ -25,6 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  *         "shelf":"exact",
  *         "row":"exact"
  * })
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  * @ORM\Entity(repositoryClass=LibraryRepository::class)
  */
 class Library
@@ -80,6 +82,11 @@ class Library
      * @ORM\Column(type="string", length=1, nullable=true)
      */
     private $row;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     public function getId(): ?int
     {
@@ -190,6 +197,18 @@ class Library
     public function setRow(?string $row): self
     {
         $this->row = $row;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }
