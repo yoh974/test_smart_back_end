@@ -2,6 +2,9 @@
 
 # Création de la base de donnée
 
+La création de la base de données s'est faite après analyse du fichier csv à importer. J'ai reporté les entêtes et ajouté
+deux colonnes une pour l'étagère et une autre pour la rangé
+
 Voici la structure de la base de données dans Symfony
 
 
@@ -44,6 +47,19 @@ rapidement. Grace à un système d'annotation sur les entités les opérations g
 
 ## Mise en place du soft delete
 
+La mise en place du soft delete s'est fait avec Gedmo. Il a fallu rajouté quelques lignes de paramètrage dans le fichier
+doctrine.yml et service.yml pour activer respectivement le filtre permettant de ne pas inclure les lignes supprimées et
+activer le listener permettant de surcharger la fonction remove de Symfony.
+
 ## Mise en place du système de recherche
 
+Via Api platform on peut implémenter la recherche en fonction des champs, mais aussi le tri des données grâce à des
+annotations sur l'entité (voir ApiFilter)
+
 ## Configuration supplémentaire 
+
+### PSR-2
+
+Afin de respecter les règles PSR-2 j'ai paramétré PHPStorm pour qu'il se charge des règles les plus simples. L'indentation
+, les espaces dans les fonctions.... J'ai dû m'assurer manuellement d'autre règles comme la ligne vide à la fin d'un fichier
+PHP, nommage des classes et des fonctions... En bref tout ce que l'IDE ne faisait pas automatiquement.
