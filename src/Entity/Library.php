@@ -9,8 +9,22 @@ use App\Repository\LibraryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "title": "partial", "name": "partial", "firstname": "partial", "type": "exact"})
+ * @ApiResource(
+ *     collectionOperations={"get","post"},
+ *     itemOperations={"get","patch"={"input_formats"={"json"={"application/merge-patch+json"}}}}
+ * )
+ * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+ *         "id": "exact",
+ *         "title": "partial",
+ *         "name": "partial",
+ *         "firstname": "partial",
+ *         "type": "exact",
+ *         "section":"exact",
+ *         "shelf":"exact",
+ *         "row":"exact"
+ * })
  * @ORM\Entity(repositoryClass=LibraryRepository::class)
  */
 class Library
