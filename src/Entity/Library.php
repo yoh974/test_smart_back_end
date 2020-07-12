@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\LibraryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ApiResource(
@@ -17,7 +18,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ApiFilter(
  *     SearchFilter::class,
  *     properties={
- *         "id": "exact",
  *         "title": "partial",
  *         "name": "partial",
  *         "firstname": "partial",
@@ -25,6 +25,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *         "section":"exact",
  *         "shelf":"exact",
  *         "row":"exact"
+ * })
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *         "title",
+ *         "name",
+ *         "firstname",
+ *         "type",
+ *         "section",
+ *         "shelf",
+ *         "row"
  * })
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  * @ORM\Entity(repositoryClass=LibraryRepository::class)
