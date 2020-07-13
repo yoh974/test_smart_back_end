@@ -51,7 +51,7 @@ class ImportCSV extends Command
             $question = new ConfirmationQuestion(
                 "Etes vous sûr de vouloir importer les données? y|n \n",
                 false,
-                '/^(y|j)/i'
+                '/^(y|yes)/i'
             );
 
             if ($helper->ask($input, $output, $question)) {
@@ -72,6 +72,7 @@ class ImportCSV extends Command
                 foreach ($rows as $row) {
                     $library = new Library();
 
+                    list($shelf, $rowToGo) = $this->assignShelfAndRow($row);
                     //set object
                     $library
                         ->setTitle($row['Titre'])
@@ -80,7 +81,9 @@ class ImportCSV extends Command
                         ->setEditor($row['Editeur'])
                         ->setBookFormat($row['Format livre'])
                         ->setType($row['Type'])
-                        ->setSection($row['Section']);
+                        ->setSection($row['Section'])
+                        ->setShelf($shelf)
+                        ->setRow($rowToGo);
                     $this->em->persist($library);
 
                     // Each 20 users persisted we flush everything
@@ -110,5 +113,73 @@ class ImportCSV extends Command
         }
 
 
+    }
+
+    private function assignShelfAndRow($row)
+    {
+        $lastShelfsTypes = [
+            "Compact-Disc",
+            "Disque(s) video",
+            "Cassette(s) audio",
+            "Console et périphériques jeux vidéos",
+            "Jouet(s)"
+        ];
+        $lastShelfRow = [
+            "Jeunesse" => "1",
+            "DVD jeunesse" => "2",
+            "Supports d'animation" => "3",
+            "Discothèque" => "4",
+            "DVD adulte" => "5"
+        ];
+        $lastShelfs = ["G", "H"];
+        $youngShelf = ["D", "E", "F"];
+        $adultShelf = ["A", "B", "C"];
+        $fiveLastRow = ["2", "3", "4", "5", "6"];
+        $shelf = "H";
+        $rowToGo = "6";
+        $type = $row["Type"];
+        $section = $row["Section"];
+        if (in_array($type, $lastShelfsTypes)) {
+            $lastShelfIndice = rand(0, 1);
+            if ($section === "Adulte") {
+                $shelf = "G";
+                $rowToGo = "6";
+            } else {
+                $shelf = $lastShelfs[$lastShelfIndice];
+                $rowToGo = $lastShelfRow[$section];
+            }
+        } else {
+            $rowIndice = rand(0, 4);
+            $shelfIndice = rand(0, 2);
+            if ($section === "Jeunesse") {
+                $shelf = $youngShelf[$shelfIndice];
+                $rowToGo = $this->getRow($type,
+                    $fiveLastRow[$rowIndice]);
+            } elseif ($section === "Adulte") {
+                $shelf = $adultShelf[$shelfIndice];
+                $rowToGo = $this->getRow($type,
+                    $fiveLastRow[$rowIndice]);
+            }
+
+        }
+
+        return array($shelf, $rowToGo);
+    }
+
+    /**
+     * @param $youngShelf
+     * @param $type
+     * @param $fiveLastRow
+     * @return array
+     */
+    private function getRow($type, $fiveLastRow): string
+    {
+
+        if ($type === "Livre(s)") {
+            $rowToGo = $fiveLastRow;
+        } else {
+            $rowToGo = "1";
+        }
+        return $rowToGo;
     }
 }

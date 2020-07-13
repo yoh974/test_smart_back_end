@@ -40,6 +40,26 @@ l'option --path. Exemple si le fichier se trouve à la racine du repertoire publ
 
 > php bin/console app:import-data --path="public/dataset.csv"
 
+## Affectation des étagères et rangée
+
+On dispose de 8 étagères et 6 rangées afin de classifier les oeuvres lors de l'import j'ai décidé de suivre le model suivant :
+
+26000 enregistrements pour 8 étagères, cela fait 3200 oeuvres par étagères et 541 par rangé en répartissant équitablement.
+En fonction du nombre d'enregistrements trouvé j'affecterai les étagères
+
+Les deux dernières étagères contiendront les disques, cassettes audios et DVD et console de jeux et le jouet ; les sections seront répartie ainsi :
+1:jeunesse,2:DVD jeunesse,3:support d'animation,4:Discotheque,5:DVD adulte,6:Adulte (5000 enregistrements)
+
+La rangée 6 de l'étagère H contiendra les ouvrages qui ne correspondent à aucune règle
+
+Les étagères D,E,F contiendront tous les ouvrages dédiés à la jeunesse. On les classera du plus facile à lire au plus difficile.
+Les livres étant en nombre plus important on les répartira sur 5 rangées
+1:livre DVD,livre CD,Livre lu,Revues,2&3&45&6: Livre(s) (9000 enregistrements)
+
+Les étagères A,B,C contiendront les livres pour Adultes. La répartition
+On suivra la même répartition que précédemment :
+2&3&4&5&6 : Livre(s) 1:autres
+
 # Api Plateform
 
 Afin de mettre en place le CRUD j'utilise Api platform qui me permet de mettre en place une API avec une documentation 
